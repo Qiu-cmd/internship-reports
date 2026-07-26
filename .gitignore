@@ -1,0 +1,7 @@
+node_modules
+dist
+.env
+my-project/
+日/
+周/
+*.docx
