@@ -8,3 +8,4 @@ my-project/
 
 .vercel
 .env*
+".vercel-token"  
