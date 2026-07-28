@@ -22,6 +22,8 @@ jobs:
           node-version: 22
       - run: npm ci
       - run: npm run build
+        env:
+            VITE_ACCESS_PASSWORD: ${{ secrets.VITE_ACCESS_PASSWORD }}
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:
