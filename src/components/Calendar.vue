@@ -1,34 +1,34 @@
 <template>
   <div class="select-none">
-    <div class="mb-4 flex items-center justify-between">
-      <button class="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-white transition" @click="prevMonth">
-        <ChevronLeft class="h-5 w-5" />
+    <div class="mb-3 sm:mb-4 flex items-center justify-between">
+      <button class="rounded-lg p-1.5 sm:p-2 text-gray-400 hover:bg-gray-800 hover:text-white transition" @click="prevMonth">
+        <ChevronLeft class="h-4 w-4 sm:h-5 sm:w-5" />
       </button>
-      <span class="text-lg font-black text-white">{{ year }}年{{ month }}月</span>
-      <button class="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-white transition" @click="nextMonth">
-        <ChevronRight class="h-5 w-5" />
+      <span class="text-base sm:text-lg font-black text-white">{{ year }}年{{ month }}月</span>
+      <button class="rounded-lg p-1.5 sm:p-2 text-gray-400 hover:bg-gray-800 hover:text-white transition" @click="nextMonth">
+        <ChevronRight class="h-4 w-4 sm:h-5 sm:w-5" />
       </button>
     </div>
 
-    <div class="mb-2 grid grid-cols-7 text-center">
-      <span v-for="d in weekDays" :key="d" class="text-xs font-semibold text-gray-500 py-1">{{ d }}</span>
+    <div class="mb-1 sm:mb-2 grid grid-cols-7 text-center">
+      <span v-for="d in weekDays" :key="d" class="text-[10px] sm:text-xs font-semibold text-gray-500 py-1">{{ d }}</span>
     </div>
 
-    <div class="grid grid-cols-7 text-center gap-1">
+    <div class="grid grid-cols-7 text-center">
       <div v-for="i in startDay" :key="'empty-' + i" class="aspect-square" />
 
       <button
         v-for="day in daysInMonth"
         :key="day"
         type="button"
-        class="relative flex aspect-square items-center justify-center rounded-xl text-sm font-bold transition"
+        class="relative flex aspect-square items-center justify-center rounded-lg sm:rounded-xl text-[13px] sm:text-sm font-bold transition active:scale-95"
         :class="dayClass(day)"
         @click="selectDay(day)"
       >
         {{ day }}
         <span
           v-if="markedDates.has(dateString(day))"
-          class="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-blue-400"
+          class="absolute bottom-0.5 sm:bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-blue-400"
         />
       </button>
     </div>

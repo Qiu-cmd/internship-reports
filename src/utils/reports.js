@@ -7,10 +7,17 @@ function decodeRaw(input) {
   if (typeof input !== 'string') {
     input = input?.default || input?.body || ''
   }
-  // Decode base64 data URL from Vite/Rolldown
+  // Decode base64 data URL from Vite/Rolldown (UTF-8 safe)
   const m = input.match(/^data:text\/markdown;base64,(.+)$/)
   if (m) {
-    try { return atob(m[1]) } catch (e) { return input }
+    try {
+      const binary = atob(m[1])
+      const bytes = new Uint8Array(binary.length)
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i)
+      }
+      return new TextDecoder('utf-8').decode(bytes)
+    } catch (e) { return input }
   }
   return input
 }

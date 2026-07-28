@@ -1,27 +1,30 @@
 <template>
   <div class="min-h-screen bg-gray-900 text-gray-100">
-    <div class="mx-auto max-w-2xl px-4 py-6 space-y-5">
+    <div class="mx-auto max-w-2xl px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-5">
+      <!-- 标题栏 -->
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-xs font-semibold tracking-[0.3em] text-blue-200">INTERNSHIP LOG</p>
-          <h1 class="mt-1 text-2xl font-black text-white">实习日报周报</h1>
+          <p class="text-[10px] sm:text-xs font-semibold tracking-[0.3em] text-blue-200">INTERNSHIP LOG</p>
+          <h1 class="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-black text-white">实习日报周报</h1>
         </div>
         <button
-          class="flex h-9 w-9 items-center justify-center rounded-xl text-gray-400 hover:bg-gray-800 hover:text-white transition"
+          class="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg sm:rounded-xl text-gray-400 hover:bg-gray-800 hover:text-white transition shrink-0"
           @click="toggleAdmin"
           title="管理"
         >
-          <Settings class="h-5 w-5" />
+          <Settings class="h-4 w-4 sm:h-5 sm:w-5" />
         </button>
       </div>
 
-      <section class="rounded-3xl border border-white/10 bg-gray-800 p-5 shadow-2xl shadow-black/25">
+      <!-- 日历 -->
+      <section class="rounded-2xl sm:rounded-3xl border border-white/10 bg-gray-800 p-3 sm:p-5 shadow-2xl shadow-black/25">
         <Calendar v-model="selectedDate" :marked-dates="allMarkedDates" @select="handleDateSelect" />
       </section>
 
-      <section v-if="selectedDate" class="space-y-3">
-        <h2 class="flex items-center gap-2 text-sm font-bold text-gray-300">
-          <span class="inline-block h-2 w-2 rounded-full bg-blue-500" />
+      <!-- 选中日期内容 -->
+      <section v-if="selectedDate" class="space-y-2 sm:space-y-3">
+        <h2 class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-gray-300">
+          <span class="inline-block h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-blue-500" />
           {{ formatReadableDate(selectedDate) }}
         </h2>
 
@@ -33,13 +36,13 @@
             @click="goDayDetail(r.date)"
           />
         </template>
-        <div v-else class="rounded-2xl bg-gray-800/50 px-4 py-8 text-center text-sm text-gray-500">
+        <div v-else class="rounded-xl sm:rounded-2xl bg-gray-800/50 px-4 py-6 sm:py-8 text-center text-xs sm:text-sm text-gray-500">
           该日期暂无日报
         </div>
 
         <template v-if="weekReportForDate">
-          <h2 class="flex items-center gap-2 text-sm font-bold text-gray-300 pt-2">
-            <span class="inline-block h-2 w-2 rounded-full bg-purple-500" />
+          <h2 class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-gray-300 pt-2">
+            <span class="inline-block h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-purple-500" />
             所属周报
           </h2>
           <ReportCard
@@ -49,9 +52,10 @@
         </template>
       </section>
 
-      <section v-else class="rounded-2xl bg-gray-800/30 px-4 py-16 text-center">
-        <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-800/60">
-          <CalendarDays class="h-8 w-8 text-gray-500" />
+      <!-- 初始引导 -->
+      <section v-else class="rounded-2xl bg-gray-800/30 px-4 py-12 sm:py-16 text-center">
+        <div class="mx-auto mb-3 sm:mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-xl sm:rounded-2xl bg-gray-800/60">
+          <CalendarDays class="h-6 w-6 sm:h-8 sm:w-8 text-gray-500" />
         </div>
         <p class="text-sm font-semibold text-gray-400">点击日历上的日期</p>
         <p class="mt-1 text-xs text-gray-500">查看当天的日报和周报</p>
