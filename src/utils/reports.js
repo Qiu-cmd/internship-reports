@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 
-const dailyModules = import.meta.glob('/content/daily/*.md', { as: 'raw', eager: true })
-const weeklyModules = import.meta.glob('/content/weekly/*.md', { as: 'raw', eager: true })
+const dailyModules = import.meta.glob('/content/daily/*.md', { query: '?raw', import: 'default', eager: true })
+const weeklyModules = import.meta.glob('/content/weekly/*.md', { query: '?raw', import: 'default', eager: true })
 
 function decodeRaw(input) {
   if (typeof input !== 'string') {
