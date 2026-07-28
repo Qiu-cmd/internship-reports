@@ -52,14 +52,29 @@
         </template>
       </section>
 
-      <!-- 初始引导 -->
-      <section v-else class="rounded-2xl bg-gray-800/30 px-4 py-12 sm:py-16 text-center">
+      <!-- 未选日期时：显示引导或周报列表 -->
+      <template v-if="!selectedDate">
+        <section v-if="weeklyReports.length" class="space-y-2 sm:space-y-3">
+          <h2 class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-gray-300">
+            <span class="inline-block h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-purple-500" />
+            周报
+          </h2>
+          <ReportCard
+            v-for="w in weeklyReports"
+            :key="w.id"
+            :report="w"
+            @click="goWeekDetail(w.id)"
+          />
+        </section>
+
+        <section v-else class="rounded-2xl bg-gray-800/30 px-4 py-12 sm:py-16 text-center">
         <div class="mx-auto mb-3 sm:mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-xl sm:rounded-2xl bg-gray-800/60">
           <CalendarDays class="h-6 w-6 sm:h-8 sm:w-8 text-gray-500" />
         </div>
         <p class="text-sm font-semibold text-gray-400">点击日历上的日期</p>
         <p class="mt-1 text-xs text-gray-500">查看当天的日报和周报</p>
       </section>
+      </template>
     </div>
 
     <AdminPanel v-if="adminMode" @close="adminMode = false" :date="selectedDate" />
