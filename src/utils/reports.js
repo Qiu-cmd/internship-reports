@@ -3,10 +3,21 @@ import { computed } from 'vue'
 const dailyModules = import.meta.glob('/content/daily/*.md', { as: 'raw', eager: true })
 const weeklyModules = import.meta.glob('/content/weekly/*.md', { as: 'raw', eager: true })
 
+function decodeRaw(input) {
+  if (typeof input !== 'string') {
+    input = input?.default || input?.body || ''
+  }
+  // Decode base64 data URL from Vite/Rolldown
+  const m = input.match(/^data:text\/markdown;base64,(.+)$/)
+  if (m) {
+    try { return atob(m[1]) } catch (e) { return input }
+  }
+  return input
+}
+
 function parseFrontmatter(raw) {
-  // Unwrap Vite/Rolldown module object if needed
-  const content = typeof raw === 'string' ? raw : (raw?.default || raw?.body || '')
-  if (typeof content !== 'string') return { meta: {}, body: '' }
+  const content = decodeRaw(raw)
+  if (typeof content !== 'string' || !content) return { meta: {}, body: '' }
   // Normalize line endings (handle Windows CRLF)
   const normalized = content.replace(/\r\n/g, '\n')
   const match = normalized.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
@@ -33,8 +44,7 @@ function extractSummary(body, length = 80) {
 export const reportsByDate = computed(() => {
   const map = new Map()
   Object.entries(dailyModules).forEach(([path, raw]) => {
-    // Unwrap Vite/Rolldown module wrapper if needed
-    const source = typeof raw === 'string' ? raw : (raw?.default || raw?.body || String(raw))
+    const source = decodeRaw(raw)
     const { meta, body } = parseFrontmatter(source)
     const date = meta.date || path.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || ''
     const report = {
@@ -54,8 +64,7 @@ export const reportsByDate = computed(() => {
 
 export const weeklyReports = computed(() => {
   return Object.entries(weeklyModules).map(([path, raw]) => {
-    // Unwrap Vite/Rolldown module wrapper if needed
-    const source = typeof raw === 'string' ? raw : (raw?.default || raw?.body || String(raw))
+    const source = decodeRaw(raw)
     const { meta, body } = parseFrontmatter(source)
     const idMatch = path.match(/week-(\d+)/)
     return {
