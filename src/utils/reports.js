@@ -4,8 +4,11 @@ const dailyModules = import.meta.glob('/content/daily/*.md', { as: 'raw', eager:
 const weeklyModules = import.meta.glob('/content/weekly/*.md', { as: 'raw', eager: true })
 
 function parseFrontmatter(raw) {
+  // Unwrap Vite/Rolldown module object if needed
+  const content = typeof raw === 'string' ? raw : (raw?.default || raw?.body || '')
+  if (typeof content !== 'string') return { meta: {}, body: '' }
   // Normalize line endings (handle Windows CRLF)
-  const normalized = raw.replace(/\r\n/g, '\n')
+  const normalized = content.replace(/\r\n/g, '\n')
   const match = normalized.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
   if (!match) return { meta: {}, body: normalized }
   const meta = {}
@@ -30,14 +33,16 @@ function extractSummary(body, length = 80) {
 export const reportsByDate = computed(() => {
   const map = new Map()
   Object.entries(dailyModules).forEach(([path, raw]) => {
-    const { meta, body } = parseFrontmatter(raw)
+    // Unwrap Vite/Rolldown module wrapper if needed
+    const source = typeof raw === 'string' ? raw : (raw?.default || raw?.body || String(raw))
+    const { meta, body } = parseFrontmatter(source)
     const date = meta.date || path.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || ''
     const report = {
       date,
       type: 'daily',
       tags: Array.isArray(meta.tags) ? meta.tags : [],
       title: meta.title || extractSummary(body, 30),
-      raw,
+      raw: source,
       body,
       summary: extractSummary(body)
     }
@@ -49,14 +54,16 @@ export const reportsByDate = computed(() => {
 
 export const weeklyReports = computed(() => {
   return Object.entries(weeklyModules).map(([path, raw]) => {
-    const { meta, body } = parseFrontmatter(raw)
+    // Unwrap Vite/Rolldown module wrapper if needed
+    const source = typeof raw === 'string' ? raw : (raw?.default || raw?.body || String(raw))
+    const { meta, body } = parseFrontmatter(source)
     const idMatch = path.match(/week-(\d+)/)
     return {
       id: meta.id || (idMatch ? parseInt(idMatch[1]) : 1),
       title: meta.title || '周报',
       dateRange: meta.dateRange || '',
       tags: Array.isArray(meta.tags) ? meta.tags : [],
-      raw,
+      raw: source,
       body,
       summary: extractSummary(body)
     }
